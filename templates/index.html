@@ -1,0 +1,164 @@
+<!doctype html>
+<html>
+<head>
+  <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
+  <link href="https://unpkg.com/nes.css/css/nes.css" rel="stylesheet" />
+  
+  <link rel="shortcut icon" type="image/png" href="https://nostalgic-css.github.io/NES.css/favicon.png">
+  <link rel="shortcut icon" sizes="196x196"  href="https://nostalgic-css.github.io/NES.css/favicon.png">
+  <link rel="apple-touch-icon"               href="https://nostalgic-css.github.io/NES.css/favicon.png">
+
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+  <!-- flask: static files are auto-served from the static dir
+       - https://flask.palletsprojects.com/en/1.1.x/tutorial/static/
+  -->
+  <link href="/static/fontawesome-free-5.9.0-web/css/all.css" rel="stylesheet" />
+
+  <style>
+    html, body, pre, code, kbd, samp {
+        font-family: "Press Start 2P";
+    }
+  </style>
+
+  <title>Halite Scoreboard</title>
+</head>
+<!-- like the idea of having the whole site be pixel-y like a game
+     - seems like it will be a struggle to fight against all the things I'm using
+     - not feeling like fighting this crap so damned much
+     - liked this color palette: https://lospec.com/palette-list/blk-36
+       - other really cool palettes at that site: lospec
+-->
+<body class="d-flex flex-column h-100 min-vh-100" style="background-color: #643499">
+  <header>
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+      <div class="nav-brand">
+        <!--<i class="fas fa-user-astronaut"></i>-->
+        <a href="https://nostalgic-css.github.io/NES.css/">
+          <h1><i class="snes-jp-logo brand-logo"></i> Halite Scoreboard</h1>
+        </a>
+      </div>
+      <!--
+      <a class="navbar-brand" href="#">Fixed navbar</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      -->
+      <div class="collapse navbar-collapse" id="navbarCollapse">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="/scores">Scores <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link disabled" href="#" aria-disabled="true">Authors</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Bots</a>
+          </li>
+        </ul>
+        <!--
+        <form class="form-inline mt-2 mt-md-0">
+          <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+        -->
+      </div>
+    </nav>
+  </header>
+
+  <!-- As a part of the footer work, learned about the margin & padding shortcut classes
+        described in https://getbootstrap.com/docs/4.3/utilities/spacing/
+  -->
+  <main role="main" class="flex-shrink-0" style="margin-top: 130px">
+    <div class="nes-table-responsive">
+      <table class="nes-table is-bordered is-dark">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Last Seen</th>
+            <th>Rank</th>
+            <th>Skill</th>
+            <th>mu</th>
+            <th>sigma</th>
+            <th>Games Played</th>
+            <th>Active</th>
+            <th>Path</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for rank_listing in ranks %}
+            <tr>
+              <td>{{ rank_listing["name"]      }}</td>
+              <td>{{ rank_listing["last_seen"] }}</td>
+              <td>{{ rank_listing["rank"]      }}</td>
+              <td>{{ rank_listing["skill"]     }}</td>
+              <td>{{ rank_listing["mu"]        }}</td>
+              <td>{{ rank_listing["sigma"]     }}</td>
+              <td>{{ rank_listing["ngames"]    }}</td>
+              <td>{{ rank_listing["active"]    }}</td>
+              <td>{{ rank_listing["path"]      }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <footer class="footer mt-auto py-3">
+    <!-- - flex-row-reverse puts all row items in from right to left:
+           - https://getbootstrap.com/docs/4.3/utilities/flex/
+         - text should use the text-muted class to look like footer text
+         - tooltip docs: https://getbootstrap.com/docs/4.3/components/tooltips/
+         - spacing between footer items specified by `mr-3` class:
+           - doc: https://getbootstrap.com/docs/4.3/utilities/spacing/
+           - 3 is the designator for one $spacer unit
+             - docs list other multipliers
+    -->
+    <div class="d-flex p-2 bd-highlight flex-row-reverse">
+      <div style="position: relative"
+            data-toggle="tooltip" data-placement="top" title="Game Theme Provided by NES.css">
+        <a href="https://nostalgic-css.github.io/NES.css/" class="stretched-link">
+          <i class="snes-jp-logo brand-logo"></i>
+        </a>
+      </div>
+      <!-- so fucking weird, but stretching the link up to the containing div makes the hover work
+           - fuck me, right in the face HTML
+           - stretched link docs: https://getbootstrap.com/docs/4.3/utilities/stretched-link/
+      -->
+      <div class="mr-3" style="position: relative"
+          data-toggle="tooltip" data-placement="top" title="Halite Created by Two Sigma">
+        <a href="https://www.twosigma.com/careers/" class="stretched-link">
+          <img src="https://2018.halite.io/assets/images/logo-two-sigma.png" height="50px" />
+        </a>
+      </div>
+      <!--
+      <a href="https://nostalgic-css.github.io/NES.css/" class="mr-3">
+        <i class="nes-bulbasaur fa-9x"
+          data-toggle="tooltip" data-placement="top" title="Kevin"></i>
+      </a>
+      <div class="mr-3" style="position: relative"
+          data-toggle="tooltip" data-placement="top" title="Kevin">
+        <a href="https://nostalgic-css.github.io/NES.css/" class="stretched-link">
+          <i class="fa-fas fa-user-astronaut w3-jumbo"></i>
+        </a>
+      </div>
+      -->
+    </div>
+  </footer>
+
+
+  <!-- Bootstrap core JavaScript
+  ================================================== -->
+  <!-- Placed at the end of the document so the pages load faster -->
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  <script type="text/javascript">
+    $(function () {
+      $('[data-toggle="tooltip"]').tooltip()
+    })
+  </script>
+</body>
+</html>
