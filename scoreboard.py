@@ -12,14 +12,35 @@ def hello():
 def score():
     import os
     print("cwd: %s" % os.getcwd())
-    rank_filepath = "../../Halite-III/tools/manager/ranks/current.log"
-    ranks = parse_rank_file(rank_filepath)
+
+    # rank_filepath = "../../Halite-III/tools/manager/ranks/current.log"
+    # rank_lines = rank_file_local(rank_filepath)
+
+    rank_url = "https://raw.githubusercontent.com/kvimber/halite-scores/master/report.txt"
+    rank_lines = rank_file_http(rank_url)
+
+    ranks = parse_rank_file(rank_lines)
     return render_template("index.html", ranks=ranks)
 
-def parse_rank_file(filepath):
+def rank_file_local(filepath):
     rank_file = open(filepath, 'r')
     rank_lines = rank_file.readlines()
     rank_file.close()
+    return rank_lines
+
+def rank_file_http(file_url):
+    import requests
+    response = requests.get(file_url)
+    if response.status_code != 200:
+        msg = "scoreboard.py rank_file_url could not get rank file:"
+        msg += ("\n- URL: %s" % file_url)
+        msg += ("\n- status: %d" % response.status_code)
+        msg += ("\n- response: %d" % response)
+        raise RuntimeError(msg)
+    rank_lines = response.text.split("\n")
+    return rank_lines
+
+def parse_rank_file(rank_lines):
 
     ranks = []
     for line in rank_lines:
