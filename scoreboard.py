@@ -38,6 +38,8 @@ def rank_file_http(file_url):
         msg += ("\n- response: %d" % response)
         raise RuntimeError(msg)
     rank_lines = response.text.split("\n")
+    print("rank lines from URL: %s" % file_url)
+    print(response.text)
     return rank_lines
 
 def parse_rank_file(rank_lines):
